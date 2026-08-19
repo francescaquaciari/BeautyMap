@@ -3,9 +3,9 @@ package com.example.beautymap.di
 import android.content.Context
 import androidx.room.Room
 import com.example.beautymap.data.local.AppDatabase
-import com.example.beautymap.data.local.RoomLocalRepository
-import com.example.beautymap.domain.repositories.LocalRepository
-import dagger.Binds
+//import com.example.beautymap.data.local.RoomLocalRepository
+//import com.example.beautymap.domain.repositories.LocalRepository
+//import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,13 +24,14 @@ object DatabaseModule {
         context,
         AppDatabase::class.java,
         "app_database"
-    ).fallbackToDestructiveMigration().build()
+    ).fallbackToDestructiveMigration(false).build()
 
     @Provides
     @Singleton
     fun provideUserDao(database: AppDatabase) = database.userDao()
 }
 
+/*
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DatabaseRepositoryModule{
@@ -40,4 +41,4 @@ abstract class DatabaseRepositoryModule{
         roomLocalRepository: RoomLocalRepository
     ): LocalRepository
 
-}
+}*/

@@ -88,7 +88,7 @@ data class FeatureProperties(
             else -> "Indirizzo non disponibile"
         }
 
-    val indirizzoCompleto: String
+    /*private val indirizzoCompleto: String
         get() {
             val parts = mutableListOf<String>()
             if (!city.isNullOrBlank()) parts.add(city)
@@ -101,5 +101,5 @@ data class FeatureProperties(
             } else {
                 "Indirizzo non disponibile"
             }
-        }
+        }*/
 }

@@ -1,7 +1,6 @@
 package com.example.beautymap.ui.screen.detail
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +52,7 @@ import com.example.beautymap.domain.model.User
 import com.example.beautymap.ui.theme.Pink40
 import com.example.beautymap.ui.theme.Purple40
 import com.example.beautymap.ui.theme.PurpleGrey40
+import androidx.core.net.toUri
 
 @Composable
 fun ScreenDetail(
@@ -139,7 +139,7 @@ fun ScreenDetail(
                     if (user.phone.isNotBlank()) {
                         Button(
                             onClick = {
-                                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${user.phone}"))
+                                val intent = Intent(Intent.ACTION_DIAL, "tel:${user.phone}".toUri())
                                 context.startActivity(intent)
                             },
                             modifier = Modifier.weight(1f),
@@ -154,7 +154,8 @@ fun ScreenDetail(
 
                     Button(
                         onClick = {
-                            val gmmIntentUri = Uri.parse("geo:${user.lat},${user.lng}?q=${user.lat},${user.lng}(${user.name})")
+                            val gmmIntentUri =
+                                "geo:${user.lat},${user.lng}?q=${user.lat},${user.lng}(${user.name})".toUri()
                             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                             context.startActivity(mapIntent)
                         },
@@ -171,7 +172,7 @@ fun ScreenDetail(
                         Button(
                             onClick = {
                                 val url = if (!user.website.startsWith("http")) "https://${user.website}" else user.website
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                                 context.startActivity(intent)
                             },
                             modifier = Modifier.weight(1f),
@@ -224,7 +225,7 @@ fun ScreenDetail(
                         iconColor = Purple40,
                         isClickable = true,
                         onClick = {
-                            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${user.phone}"))
+                            val intent = Intent(Intent.ACTION_DIAL, "tel:${user.phone}".toUri())
                             context.startActivity(intent)
                         }
                     )
@@ -246,7 +247,7 @@ fun ScreenDetail(
                         iconColor = Pink40,
                         isClickable = true,
                         onClick = {
-                            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:${user.email}"))
+                            val intent = Intent(Intent.ACTION_SENDTO, "mailto:${user.email}".toUri())
                             context.startActivity(intent)
                         }
                     )
@@ -272,7 +273,7 @@ fun ScreenDetail(
                         isClickable = true,
                         onClick = {
                             val url = if (!user.website.startsWith("http")) "https://${user.website}" else user.website
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                         }
                     )
                     needsDivider = true
@@ -294,7 +295,7 @@ fun ScreenDetail(
                         isClickable = true,
                         onClick = {
                             val url = if (!user.facebook.startsWith("http")) "https://${user.facebook}" else user.facebook
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                         }
                     )
                     needsDivider = true
@@ -316,7 +317,7 @@ fun ScreenDetail(
                         isClickable = true,
                         onClick = {
                             val url = if (!user.instagram.startsWith("http")) "https://${user.instagram}" else user.instagram
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                         }
                     )
                 }
