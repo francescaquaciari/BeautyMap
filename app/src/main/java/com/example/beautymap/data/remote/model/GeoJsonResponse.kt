@@ -8,6 +8,7 @@ data class GeoJsonResponse(
 )
 
 data class Feature(
+    val id: String? = null,
     val geometry: GeoJsonGeometry,
     val properties: FeatureProperties
 )
@@ -43,19 +44,62 @@ data class GeoJsonGeometry(
 }
 
 data class FeatureProperties(
-    @SerializedName("name") val name: String? = "Centro Estetico",
-    @SerializedName("beauty") val beauty: String? = null,
-    @SerializedName("shop") val shop: String? = null,
-    @SerializedName("addr:street") val street: String? = null,
-    @SerializedName("addr:housenumber") val houseNumber: String? = null
+    @SerializedName("name")
+    val name: String? = null,
+
+    // Legge sia "email" che "contact:email" (se usate Gson)
+    @SerializedName("email", alternate = ["contact:email"])
+    val email: String? = null,
+
+    @SerializedName("addr:city", alternate = ["city", "is_in:city"])
+    val city: String? = null,
+
+    @SerializedName("addr:street")
+    val street: String? = null,
+
+    @SerializedName("addr:housenumber")
+    val houseNumber: String? = null,
+
+    @SerializedName("beauty")
+    val beauty: String? = null,
+
+    @SerializedName("shop")
+    val shop: String? = null,
+
+    @SerializedName("phone", alternate = ["contact:phone", "contact:mobile", "phone:mobile"])
+    val phone: String? = null,
+
+    @SerializedName("facebook", alternate = ["contact:facebook"])
+    val facebook: String? = null,
+
+    @SerializedName("website", alternate = ["contact:website", "url"])
+    val website: String? = null,
+
+    @SerializedName("instagram", alternate = ["contact:instagram"])
+    val instagram: String? = null
 ) {
-    // Unisce via e numero civico se presenti, altrimenti usa i tag del negozio
-    val indirizzoCompleto: String
+    val soloCitta: String
+        get() = if (!city.isNullOrBlank()) city else "Città non disponibile"
+
+    val soloIndirizzo: String
         get() = when {
-            street != null && houseNumber != null -> "$street, $houseNumber"
-            street != null -> street
-            shop != null && beauty != null -> "$shop ($beauty)"
-            shop != null -> shop
+            !street.isNullOrBlank() && !houseNumber.isNullOrBlank() -> "$street, $houseNumber"
+            !street.isNullOrBlank() -> street
             else -> "Indirizzo non disponibile"
+        }
+
+    val indirizzoCompleto: String
+        get() {
+            val parts = mutableListOf<String>()
+            if (!city.isNullOrBlank()) parts.add(city)
+            if (!street.isNullOrBlank()) {
+                val streetWithNumber = if (!houseNumber.isNullOrBlank()) "$street, $houseNumber" else street
+                parts.add(streetWithNumber)
+            }
+            return if (parts.isNotEmpty()) {
+                parts.joinToString(", ")
+            } else {
+                "Indirizzo non disponibile"
+            }
         }
 }

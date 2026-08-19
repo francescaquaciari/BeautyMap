@@ -7,17 +7,19 @@ import jakarta.inject.Inject
 
 // 1. Questa è la nuova funzione che trasforma ogni "Feature" del GeoJSON in un vostro "User"
 private fun Feature.toDomain(): User {
-    // Generiamo un ID numerico finto partendo dal nome dell'estetista per non rompere il "id.toLong()"
-    val idFinto = properties.name?.hashCode()?.toLong() ?: (1000..9999).random().toLong()
+    val stableId = id?.hashCode() ?: (properties.name ?: "").hashCode()
 
     return User(
-        id = idFinto.toInt(),
-        name = properties.name ?: "Centro Estetico",
-        username = properties.name ?: "beauty",
-        email = "info@estetica.it",
-        // Usiamo la proprietà calcolata che unisce i tag disponibili o mette una stringa di default
-        city = properties.indirizzoCompleto,
-        // Usiamo i getter personalizzati 'latitude' e 'longitude' che estraggono i dati dai poligoni
+        id = stableId,
+        name = if (!properties.name.isNullOrBlank()) properties.name else "Centro Estetico",
+        username = if (!properties.name.isNullOrBlank()) properties.name else "estetista",
+        email = properties.email ?: "",
+        city = properties.soloCitta,
+        address = properties.soloIndirizzo,
+        phone = properties.phone ?: "",
+        facebook = properties.facebook ?: "",
+        website = properties.website ?: "",
+        instagram = properties.instagram ?: "",
         lat = geometry.latitude.toString(),
         lng = geometry.longitude.toString()
     )

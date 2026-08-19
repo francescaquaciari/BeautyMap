@@ -10,6 +10,11 @@ data class UserEntity(
     val name: String,
     val username: String,
     val city: String,
+    val address: String = "",
+    val phone: String = "",
+    val facebook: String = "",
+    val website: String = "",
+    val instagram: String = "",
     val lat: Double,
     val lng: Double,
     val createdAt: Long = System.currentTimeMillis()

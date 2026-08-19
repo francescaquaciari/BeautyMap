@@ -6,6 +6,11 @@ data class User(
     val username: String,
     val email: String,
     val city: String,
+    val address: String = "",
+    val phone: String = "",
+    val facebook: String = "",
+    val website: String = "",
+    val instagram: String = "",
     val lat: String,
     val lng: String
 )

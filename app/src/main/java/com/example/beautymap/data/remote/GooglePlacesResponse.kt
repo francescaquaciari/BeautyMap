@@ -1,6 +1,6 @@
 package com.example.beautymap.data.remote
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 
 data class GeoJsonResponse(
     val features: List<Feature>
@@ -21,15 +21,19 @@ data class GeoJsonGeometry(
 }
 
 data class FeatureProperties(
-    @SerialName("name") val name: String? = "Centro Estetico",
-    @SerialName("addr:street") val street: String? = null,
-    @SerialName("addr:housenumber") val houseNumber: String? = null
+    @SerializedName("name") val name: String? = "Centro Estetico",
+    @SerializedName("beauty") val beauty: String? = null,
+    @SerializedName("shop") val shop: String? = null,
+    @SerializedName("email") val email: String? = null,
+    @SerializedName("addr:street") val street: String? = null,
+    @SerializedName("addr:city") val city: String? = null,
+    @SerializedName("addr:housenumber") val houseNumber: String? = null
 ) {
-    // Unisce via e numero civico per fare l'indirizzo completo
+    // Unisce città, via e numero civico per fare l'indirizzo completo
     val indirizzoCompleto: String
         get() = when {
-            street != null && houseNumber != null -> "$street, $houseNumber"
-            street != null -> street
+            city != null && street != null && houseNumber != null -> "$city, $street, $houseNumber"
+            city != null -> city
             else -> "Indirizzo non disponibile"
         }
 }

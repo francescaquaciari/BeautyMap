@@ -12,6 +12,11 @@ private fun User.toEntity() = UserEntity(
     username = username,
     email = email,
     city = city,
+    address = address,
+    phone = phone,
+    facebook = facebook,
+    website = website,
+    instagram = instagram,
     lat = lat.toDoubleOrNull() ?: 0.0,
     lng = lng.toDoubleOrNull() ?: 0.0
 )
@@ -22,6 +27,11 @@ private fun UserEntity.toDomain() = User(
     username = username,
     email = email,
     city = city,
+    address = address,
+    phone = phone,
+    facebook = facebook,
+    website = website,
+    instagram = instagram,
     lat = lat.toString(),
     lng = lng.toString()
 )

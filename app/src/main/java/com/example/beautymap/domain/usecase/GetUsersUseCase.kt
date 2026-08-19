@@ -8,26 +8,27 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetUsersUseCase  @Inject constructor(
+class GetUsersUseCase @Inject constructor(
     private val remoteRepository: RemoteRepository,
     private val localRepository: LocalRepository
 ) {
     operator fun invoke(): Flow<Result<List<User>>> = flow {
         emit(Result.Loading("Loading..."))
 
-        runCatching {
-        println("Check repository")
-        var localData = localRepository.getAll()
-        if (localData.isEmpty()){
+        try {
             val remoteData = remoteRepository.downloadData()
-            println("remoteData: ${remoteData.size}")
-            localRepository.save(remoteData)
-
-            localData = localRepository.getAll()
-
-        }
-        emit(Result.Success(localData))
+            if (remoteData.isNotEmpty()) {
+                localRepository.save(remoteData)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
+        val localData = localRepository.getAll()
+        if (localData.isNotEmpty()) {
+            emit(Result.Success(localData))
+        } else {
+            emit(Result.Error("Impossibile caricare i dati delle estetiste"))
+        }
     }
 }

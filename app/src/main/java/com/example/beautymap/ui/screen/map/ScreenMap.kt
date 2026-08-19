@@ -31,15 +31,18 @@ fun ScreenMap (
         modifier = Modifier.fillMaxSize(),
     ) {
         uiState.items.forEach { user ->
+            val snippetText = when {
+                user.city != "Città non disponibile" && user.address != "Indirizzo non disponibile" -> "${user.city}, ${user.address}"
+                user.city != "Città non disponibile" -> user.city
+                else -> user.address
+            }
             Marker(
-                // Sostituite la riga 35 con questa:
                 state = rememberUpdatedMarkerState(position = LatLng(user.lat.toDoubleOrNull() ?: 0.0, user.lng.toDoubleOrNull() ?: 0.0)),
                 title = user.name,
-                snippet = user.city,
+                snippet = snippetText,
                 onInfoWindowClick = {
                     onItemClick(user)
                 }
-
             )
         }
 
