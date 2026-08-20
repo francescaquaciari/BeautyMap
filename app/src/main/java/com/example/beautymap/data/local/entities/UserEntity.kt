@@ -17,5 +17,5 @@ data class UserEntity(
     val instagram: String = "",
     val lat: Double,
     val lng: Double,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis()                                                 //serve per capire quando sono stati scaricati i dati
 )

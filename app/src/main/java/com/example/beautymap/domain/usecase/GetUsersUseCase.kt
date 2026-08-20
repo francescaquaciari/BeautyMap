@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetUsersUseCase @Inject constructor(
-    private val remoteRepository: RemoteRepository,
-    private val localRepository: LocalRepository
+    private val remoteRepository: RemoteRepository,                                               //interfaccia che implementa RemoteRepository
+    private val localRepository: LocalRepository                                                  //interfaccia che implementa LocalRepository
 ) {
-    operator fun invoke(): Flow<Result<List<User>>> = flow {
+    operator fun invoke(): Flow<Result<List<User>>> = flow {    //restituisce un flusso di dati di tipo User
         emit(Result.Loading("Loading..."))
 
-        try {
+        try {                                                                                     //prova a scaricare i dati da internet
             val remoteData = remoteRepository.downloadData()
             if (remoteData.isNotEmpty()) {
                 localRepository.save(remoteData)

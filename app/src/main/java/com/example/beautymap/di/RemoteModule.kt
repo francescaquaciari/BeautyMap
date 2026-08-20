@@ -21,25 +21,26 @@ object RemoteModule {
 
     @Provides @Singleton
     fun provideClient():Retrofit {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+        val interceptor = HttpLoggingInterceptor()                                    //intercettore per spiare le chiamate di rete
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)                       //imposta il livello di dettaglio dell'intercettore
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()       //crea il client di rete con l'intercettore
 
         return Retrofit.Builder()
             .client(client)
             .baseUrl("https://pastebin.com")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())                      //converte il JSON in oggetti Kotlin
             .build()
     }
 
     @Provides @Singleton
-    fun endpointService(client: Retrofit) = client.create(EndpointService::class.java)
+    fun endpointService(client: Retrofit) = client.create(EndpointService::class.java)            //crea una istanza di EndpointService
 
 }
 
+@Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RemoteRepositoryModule {
+abstract class RemoteRepositoryModule {                                                           //serve per ottenere l'istanza del repository remoto
 
     @Binds
     @Singleton

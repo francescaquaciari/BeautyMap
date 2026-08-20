@@ -3,17 +3,17 @@ package com.example.beautymap.data.remote.model
 import com.google.gson.annotations.SerializedName
 
 
-data class GeoJsonResponse(
+data class GeoJsonResponse(          //classe che rappresenta la risposta della chiamata al server
     val features: List<Feature>
 )
 
-data class Feature(
+data class Feature(                  //classe che rappresenta un singolo elemento della risposta
     val id: String? = null,
     val geometry: GeoJsonGeometry,
     val properties: FeatureProperties
 )
 
-data class GeoJsonGeometry(
+data class GeoJsonGeometry(       //classe che rappresenta la geometria di un singolo elemento
     val type: String?,
     val coordinates: List<Any>
 ) {
@@ -29,21 +29,21 @@ data class GeoJsonGeometry(
         return try {
             if (type == "Point") {
                 // Se è un punto singolo, le coordinate sono [lng, lat]
-                (coordinates.getOrNull(index) as? Number)?.toDouble() ?: 0.0
+                (coordinates.getOrNull(index) as? Number)?.toDouble() ?: 0.0      //se è null restituisce 0.0
             } else {
                 // Se è un Polygon (come la vostra estetista), entriamo dentro le liste annidate
-                val primaLista = coordinates.getOrNull(0) as? List<*>
-                val primoPunto = primaLista?.getOrNull(0) as? List<*>
+                val primaLista = coordinates.getOrNull(0) as? List<*>      //primo livello di liste del poligono
+                val primoPunto = primaLista?.getOrNull(0) as? List<*>      //primo punto appartenente a quella lista
                 (primoPunto?.getOrNull(index) as? Number)?.toDouble() ?: 0.0
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            e.printStackTrace()                                                    //stampa l'errore nella console di Android Studio per fare il debug
             0.0
         }
     }
 }
 
-data class FeatureProperties(
+data class FeatureProperties(                                                                    //classe che rappresenta le proprietà di un singolo elemento
     @SerializedName("name")
     val name: String? = null,
 
@@ -78,28 +78,14 @@ data class FeatureProperties(
     @SerializedName("instagram", alternate = ["contact:instagram"])
     val instagram: String? = null
 ) {
-    val soloCitta: String
+    val soloCitta: String                                                                       //serve per mostrare solo la città nella mappa
         get() = if (!city.isNullOrBlank()) city else "Città non disponibile"
 
-    val soloIndirizzo: String
+    val soloIndirizzo: String                                                                   //serve per mostrare solo l'indirizzo nella mappa
         get() = when {
             !street.isNullOrBlank() && !houseNumber.isNullOrBlank() -> "$street, $houseNumber"
             !street.isNullOrBlank() -> street
             else -> "Indirizzo non disponibile"
         }
 
-    /*private val indirizzoCompleto: String
-        get() {
-            val parts = mutableListOf<String>()
-            if (!city.isNullOrBlank()) parts.add(city)
-            if (!street.isNullOrBlank()) {
-                val streetWithNumber = if (!houseNumber.isNullOrBlank()) "$street, $houseNumber" else street
-                parts.add(streetWithNumber)
-            }
-            return if (parts.isNotEmpty()) {
-                parts.joinToString(", ")
-            } else {
-                "Indirizzo non disponibile"
-            }
-        }*/
 }

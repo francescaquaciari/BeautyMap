@@ -6,8 +6,8 @@ import com.example.beautymap.domain.repositories.RemoteRepository
 import jakarta.inject.Inject
 
 // 1. Questa è la nuova funzione che trasforma ogni "Feature" del GeoJSON in un vostro "User"
-private fun Feature.toDomain(): User {
-    val stableId = id?.hashCode() ?: (properties.name ?: "").hashCode()
+private fun Feature.toDomain(): User {                                                            //converte un oggetto Feature in un oggetto User
+    val stableId = id?.hashCode() ?: (properties.name ?: "").hashCode()                           //genera un id basandosi sul JSON
 
     return User(
         id = stableId,
@@ -25,7 +25,7 @@ private fun Feature.toDomain(): User {
     )
 }
 
-class RetrofitRemoteRepository @Inject constructor(
+class RetrofitRemoteRepository @Inject constructor(                                               //classe che implementa l'interfaccia RemoteRepository
     private val service: EndpointService
 ) : RemoteRepository {
 
