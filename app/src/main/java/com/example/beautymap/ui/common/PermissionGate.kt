@@ -21,18 +21,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
+@OptIn(ExperimentalPermissionsApi::class)                                      //serve per gestire i permessi
+@Composable                                                                                  //la fun successiva crea un componente per l'interfaccia utente
 fun PermissionGate (
     permissions: List<String> = emptyList(),
-    onPermissionsAllowed: @Composable () -> Unit = {},
+    onPermissionsAllowed: @Composable () -> Unit = {},                                       //parametro che accetta la schermata da mostrare quando i permessi sono concessi
 ){
     if (permissions.isEmpty()){
-        onPermissionsAllowed()
+        onPermissionsAllowed()                                                                //se non ci sono permessi mostra la schermata
         return
     }
     // Inizializza lo stato dei permessi forniti dalla libreria Accompanist
-    val permissionState = rememberMultiplePermissionsState(permissions)
+    val permissionState = rememberMultiplePermissionsState(permissions)                         //memorizza lo stato attuale dei permessi
     // Se TUTTI i permessi nella lista sono stati concessi...
     if (permissionState.allPermissionsGranted){
         onPermissionsAllowed()      // ...mostra il contenuto protetto
@@ -41,22 +41,22 @@ fun PermissionGate (
         if (permissionState.shouldShowRationale) {       // L'utente ha rifiutato una volta, ma il sistema ci permette di riprovare spiegando perché il permesso è necessario.
 
 
-            val isDialogVisible = remember { mutableStateOf(true) }
+            val isDialogVisible = remember { mutableStateOf(true) }              //mostra il popup di spiegazione
             if (isDialogVisible.value) {
                 PermissionDialog(
                     title = "Permission required",
                     message = "Permission required to show my location on map",
-                    onDismiss = {
+                    onDismiss = {                                                                 //se l'utente annulla
                         isDialogVisible.value = false
                     },
-                    onConfirm = {
+                    onConfirm = {                                                                 //se l'utente conferma
                         permissionState.launchMultiplePermissionRequest()       // Rilancia la richiesta di sistema
                     }
                 )
             }
         } else {
             SideEffect {
-                permissionState.launchMultiplePermissionRequest()
+                permissionState.launchMultiplePermissionRequest()                             //popup nativo di sistema per richiedere i permessi
             }
         }
     }
@@ -69,38 +69,43 @@ fun PermissionDialog (
     message: String = "Message",
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {},
-
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismiss,
     ) {
         ElevatedCard {
             Column(
-                modifier = Modifier.padding (16.dp)
+                modifier = Modifier.padding(16.dp)
             ){
                 Text(
                     text = title,
                     style = typography.titleMedium
                 )
 
-               Row(
-                   modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                   horizontalArrangement = Arrangement.End
-                   ){
-                   OutlinedButton (
-                       onClick = onDismiss,
-                   ){
-                       Text("Cancel")
-                   }
+                //componente Text per mostrare il messaggio
+                Text(
+                    text = message,
+                    style = typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
 
-                   Button(
-                       onClick = onConfirm,
-                       modifier = Modifier.padding(start = 8.dp)
-                   ){
-                       Text("Request")
-                   }
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.End
+                ){
+                    OutlinedButton (
+                        onClick = onDismiss,
+                    ){
+                        Text("Cancel")
+                    }
 
-               }
+                    Button(
+                        onClick = onConfirm,
+                        modifier = Modifier.padding(start = 8.dp)
+                    ){
+                        Text("Request")
+                    }
+                }
             }
         }
     }

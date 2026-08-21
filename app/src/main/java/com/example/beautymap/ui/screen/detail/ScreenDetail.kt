@@ -2,7 +2,6 @@ package com.example.beautymap.ui.screen.detail
 
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Share
@@ -54,31 +52,31 @@ import com.example.beautymap.ui.theme.Purple40
 import com.example.beautymap.ui.theme.PurpleGrey40
 import androidx.core.net.toUri
 
-@Composable
+@Composable                                                        //interfaccia grafica della schermata di dettaglio
 fun ScreenDetail(
-    user: User
+    user: User                                                     //prende come parametro l'estetista con tutti i suoi dettagli
 ) {
-    val context = LocalContext.current
-    val initialLetter = user.name.trim().take(1).uppercase().ifEmpty { "B" }
+    val context = LocalContext.current                                                       //contesto di android per le chiamate e web
+    val initialLetter = user.name.trim().take(1).uppercase().ifEmpty { "B" }             //prima lettera del nome per il profilo
 
     Column(
-        modifier = Modifier
+        modifier = Modifier                                                                  //configurazione stile colonna
             .fillMaxSize()
             .background(Color(0xFFF8F9FA))
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState())                                      //rende la schermata scorrevole verticalmente
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)                                        //distanza tra le schede
     ) {
         // --- HERO CARD PRINCIPALE ---
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)                          //ombra sotto la card
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally                                      //elementi allineati al centro orizzontalmente
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -89,10 +87,10 @@ fun ScreenDetail(
                         modifier = Modifier
                             .size(64.dp)
                             .background(
-                                brush = Brush.linearGradient(colors = listOf(Purple40, Pink40)),
+                                brush = Brush.linearGradient(colors = listOf(Purple40, Pink40)),     //gradiente
                                 shape = CircleShape
                             ),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center                        //centra la lettera all'interno del cerchio
                     ) {
                         Text(
                             text = initialLetter,
@@ -102,7 +100,7 @@ fun ScreenDetail(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(16.dp))                          //spazio tra avatar e testo
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
@@ -152,22 +150,6 @@ fun ScreenDetail(
                         }
                     }
 
-                    Button(
-                        onClick = {
-                            val gmmIntentUri =
-                                "geo:${user.lat},${user.lng}?q=${user.lat},${user.lng}(${user.name})".toUri()
-                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                            context.startActivity(mapIntent)
-                        },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF3E5F5), contentColor = Purple40),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Icon(Icons.Default.Map, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Mappa", fontSize = 12.sp)
-                    }
-
                     if (user.website.isNotBlank()) {
                         Button(
                             onClick = {
@@ -197,7 +179,7 @@ fun ScreenDetail(
                 iconColor = Pink40
             )
 
-            HorizontalDivider(
+            HorizontalDivider(                                                                  //linea orizzontale divisoria
                 modifier = Modifier.padding(vertical = 12.dp),
                 thickness = DividerDefaults.Thickness,
                 color = DividerDefaults.color
@@ -223,11 +205,6 @@ fun ScreenDetail(
                         label = "Telefono",
                         value = user.phone,
                         iconColor = Purple40,
-                        isClickable = true,
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_DIAL, "tel:${user.phone}".toUri())
-                            context.startActivity(intent)
-                        }
                     )
                 }
 
@@ -245,11 +222,6 @@ fun ScreenDetail(
                         label = "Email",
                         value = user.email,
                         iconColor = Pink40,
-                        isClickable = true,
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_SENDTO, "mailto:${user.email}".toUri())
-                            context.startActivity(intent)
-                        }
                     )
                 }
             }
@@ -262,7 +234,7 @@ fun ScreenDetail(
 
         if (hasWebsite || hasFacebook || hasInstagram) {
             DetailSectionCard(title = "Sito Web e Social") {
-                var needsDivider = false
+                var needsDivider = false                                                      //quando inserire la linea divisoria
 
                 if (hasWebsite) {
                     DetailRow(
@@ -270,11 +242,6 @@ fun ScreenDetail(
                         label = "Sito Web",
                         value = user.website,
                         iconColor = Purple40,
-                        isClickable = true,
-                        onClick = {
-                            val url = if (!user.website.startsWith("http")) "https://${user.website}" else user.website
-                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-                        }
                     )
                     needsDivider = true
                 }
@@ -292,11 +259,6 @@ fun ScreenDetail(
                         label = "Facebook",
                         value = user.facebook,
                         iconColor = Pink40,
-                        isClickable = true,
-                        onClick = {
-                            val url = if (!user.facebook.startsWith("http")) "https://${user.facebook}" else user.facebook
-                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-                        }
                     )
                     needsDivider = true
                 }
@@ -314,11 +276,6 @@ fun ScreenDetail(
                         label = "Instagram",
                         value = user.instagram,
                         iconColor = Purple40,
-                        isClickable = true,
-                        onClick = {
-                            val url = if (!user.instagram.startsWith("http")) "https://${user.instagram}" else user.instagram
-                            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-                        }
                     )
                 }
             }
@@ -370,14 +327,11 @@ private fun DetailRow(
     label: String,
     value: String,
     iconColor: Color = Purple40,
-    isClickable: Boolean = false,
-    onClick: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .then(if (isClickable) Modifier.clickable { onClick() } else Modifier)
     ) {
         Icon(
             imageVector = icon,
@@ -398,7 +352,7 @@ private fun DetailRow(
                 text = value,
                 style = typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
-                color = if (isClickable) Purple40 else Color(0xFF2C2C2C)
+                color = Color(0xFF2C2C2C)
             )
         }
     }

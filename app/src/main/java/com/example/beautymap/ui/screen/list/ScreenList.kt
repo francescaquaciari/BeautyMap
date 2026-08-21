@@ -51,25 +51,25 @@ import com.example.beautymap.ui.theme.PurpleGrey40
 
 @Composable
 fun ScreenList(
-    viewModel: ListViewModel = hiltViewModel(),
+    viewModel: ListViewModel = hiltViewModel(),                                            //inietta il list view model usando hilt
     onItemClick: (User) -> Unit = {}
 ) {
-    val uiState = viewModel.uiState
-    ListContent(
+    val uiState = viewModel.uiState                                                            //per lo stato della UI
+    ListContent(                                                                               //passa la lista degli utenti a list content
         items = uiState.items,
         onItemClick = onItemClick
     )
 }
 
 @Composable
-private fun ListContent(
+private fun ListContent(                                                               //crea l'interfaccia vera e propria della lista
     items: List<User> = emptyList(),
     onItemClick: (User) -> Unit = {}
 ) {
-    var searchQuery by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf("") }                         //variabile per memorizzare il testo scritto nella barra di ricerca
 
-    val filteredItems = remember(items, searchQuery) {
-        if (searchQuery.isBlank()) items
+    val filteredItems = remember(items, searchQuery) {                   //calcola in automatico gli elementi da mostrare
+        if (searchQuery.isBlank()) items                                       //se la ricerca è vuota mostra tutti i centri
         else items.filter { user ->
             user.name.contains(searchQuery, ignoreCase = true) ||
                     user.city.contains(searchQuery, ignoreCase = true)
@@ -96,11 +96,11 @@ private fun ListContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedTextField(
+            OutlinedTextField(                                                               //barra di ricerca con bordo
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Cerca centri estetici o servizi...", color = Color.Gray) },
+                placeholder = { Text("Cerca centri estetici o servizi...", color = Color.Gray) },     //testo del campo quando è vuoto
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -153,7 +153,7 @@ private fun ListContent(
 }
 
 @Composable
-private fun BeautyCenterCard(
+private fun BeautyCenterCard(                   //singola card per il centro estetico
     user: User,
     onItemClick: () -> Unit = {}
 ) {
@@ -218,7 +218,7 @@ private fun BeautyCenterCard(
                         modifier = Modifier.weight(1f, fill = false)
                     )
 
-                    // Tag dinamico "Aperto" o "Estetica"
+                    // Tag "Estetica"
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = Color(0xFFF3E5F5),
@@ -268,7 +268,7 @@ private fun BeautyCenterCard(
     }
 }
 
-@Preview
+@Preview                                        //visualizzare un'anteprima della schermata
 @Composable
 private fun ListContentPreview() {
     ListContent()

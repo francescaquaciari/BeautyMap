@@ -12,22 +12,22 @@ import com.example.beautymap.common.Result
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
-data class ListUiState(
+data class ListUiState(                                        //dati con le info che dovranno essere mostrate nella grafica
     val items: List<User> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )
-@HiltViewModel
-class ListViewModel @Inject constructor(
+@HiltViewModel                                                    //segnala a hilt che è un VIewModel
+class ListViewModel @Inject constructor(                          //inietta i parametri del costruttore
     private val getUsersUseCase: GetUsersUseCase
-    ) : ViewModel() {
-    var uiState by mutableStateOf(ListUiState())
+    ) : ViewModel() {                                              //eredita dalla classe ViewModel di Android
+    var uiState by mutableStateOf(ListUiState())            //variabile che contiene lo stato della UI
         private set
     init {
         load()
     }
-    private fun load() {
-        viewModelScope.launch {
+    private fun load() {                                             //fun privata per scaricare la lista
+        viewModelScope.launch {                    //avvia la fun in background
             getUsersUseCase().collect {
                 uiState = when(it) {
                     is Result.Loading -> uiState.copy(isLoading = true)
